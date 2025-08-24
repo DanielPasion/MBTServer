@@ -112,26 +112,72 @@ app.post("/openaisentence", async (req, res) => {
     const { text } = req.body;
     if (!text) return res.status(400).json({ error: "Missing 'text' field" });
 
+    const response = await openai.chat.completions.create({
+      model: "gpt-4o-mini",
+      frequency_penalty: 0.2,
+      temperature: 0.8,
+      messages: [
+        {
+          role: "system",
+          content: `
+                    You are an English ↔ Cebuano (Bisaya) tutor.
+                    Return ONLY valid JSON with exactly these keys and types:
+                    {
+                      "bisaya": string,
+                      "english": string
+                    }
+                    Rules:
+                    - Generate a Bisaya sentence following the CEFR Language Level System (A1, A2, B1, B2, C1, C2).
+                    - The CEFR level will be provided by the user input.
+                    - Avoid repeating common phrases; vary vocabulary and sentence structures for better learning.
+                    - No extra commentary, no markdown, no trailing commas.
+                    - The output MUST be parseable by JSON.parse().
+                    - Use more randomness and creativity while keeping the sentence appropriate for the given level.
+          `,
+        },
+        { role: "user", content: text },
+      ],
+    });
+
+    res.send({ data: response.choices[0].message.content });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+app.post("/openaiguess", async (req, res) => {
+  try {
+    const { original, guess } = req.body;
+    if (!original && !guess)
+      return res.status(400).json({ error: "Missing 'text' field" });
+
     const response = await openai.responses.create({
       model: "gpt-4.1-mini",
       input: [
         {
           role: "system",
           content: `
-            You are a English ↔ Cebuano (Bisaya) tutor.
+            You are a Bisaya Tutor to English Speakers
+            You are going to be given a string in Bisaya and a user's response in either Bisaya or English
             Return ONLY valid JSON with exactly these keys and types:
             {
-              "sentence": string,
+              correct: boolean,
+              feedback: string
             }
             Rules:
-            - Generate a bisaya sentence following the CERF Language Level System (A1, A2, B1, B2, C1, C2).
-            - You will be given the CERF Language Level via User input and it is your job to return a bisaya sentence correspoinding to that level.
+            - Based off the user's response, if the user's input has the same meaning as the original Bisaya String regardless of it being in English or Bisaya, return correct as True
+            - Regardless if they are correct or not give them feedback. 
+            - If they are correct, give them praise and maybe explain what some of the words or grammar means. 
+            - If they are wrong, tell them what they got wrong, and give them the english translations of the words in the original Bisaya Questions that could help them understand more or anything else you think would help them learn more.
             - No extra commentary, no markdown, no trailing commas.
             - The output.text MUST BE PARSEABLE BY JSON.PARSE() NO MATTER WHAT DO NOT BREAK THIS FORMAT.
-            - Try not to do too common phrases all the time. Mix it up for variability so the user can learn a wide range of text.
           `,
         },
-        { role: "user", content: text },
+        {
+          role: "user",
+          content: `Original Bisaya Sentence: ${original}. User's Guess: ${guess}`,
+        },
       ],
     });
 
