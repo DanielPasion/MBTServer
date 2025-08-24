@@ -107,6 +107,49 @@ app.post("/openaitranslate", async (req, res) => {
   }
 });
 
+app.post("/openaisentence", async (req, res) => {
+  try {
+    const { text } = req.body;
+    if (!text) return res.status(400).json({ error: "Missing 'text' field" });
+
+    const response = await openai.responses.create({
+      model: "gpt-4.1-mini",
+      input: [
+        {
+          role: "system",
+          content: `
+            You are a precise English ↔ Cebuano (Bisaya) translator.
+            Return ONLY valid JSON with exactly these keys and types:
+            {
+              "translateToBisaya": boolean,
+              "translatedText": string,
+              "isSentence": boolean,
+              "sentenceExampleOriginal": string | null,
+              "sentenceExampleTranslated": string | null
+            }
+            Rules:
+            - Detect the input language (English or Cebuano) automatically.
+            - "translateToBisaya" = true only if input is English; false if input is Cebuano.
+            - "translatedText" = input translated into the opposite language.
+            - "isSentence" = true if the input is a full sentence (has a verb or clear clause); false for a word/short phrase.
+            - If "isSentence" = false, produce a simple example sentence in the original language using the input in context, and provide its translation.
+            - If "isSentence" = true, set both example fields to null.
+            - No extra commentary, no markdown, no trailing commas.
+            - The output.text MUST BE PARSEABLE BY JSON.PARSE() NO MATTER WHAT DO NOT BREAK THIS FORMAT
+            - If you are unable to process the request, instead create the JSON { "isError": true, "message": "reason" }
+          `,
+        },
+        { role: "user", content: text },
+      ],
+    });
+
+    res.send({ data: response.output_text });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
 const PORT = 3000;
 app.listen(PORT, () => {
   console.log(`✅ Server running on http://localhost:${PORT}`);
