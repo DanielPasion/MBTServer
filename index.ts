@@ -107,6 +107,41 @@ app.post("/openaitranslate", async (req, res) => {
   }
 });
 
+app.post("/openaisentence", async (req, res) => {
+  try {
+    const { text } = req.body;
+    if (!text) return res.status(400).json({ error: "Missing 'text' field" });
+
+    const response = await openai.responses.create({
+      model: "gpt-4.1-mini",
+      input: [
+        {
+          role: "system",
+          content: `
+            You are a English ↔ Cebuano (Bisaya) tutor.
+            Return ONLY valid JSON with exactly these keys and types:
+            {
+              "sentence": string,
+            }
+            Rules:
+            - Generate a bisaya sentence following the CERF Language Level System (A1, A2, B1, B2, C1, C2).
+            - You will be given the CERF Language Level via User input and it is your job to return a bisaya sentence correspoinding to that level.
+            - No extra commentary, no markdown, no trailing commas.
+            - The output.text MUST BE PARSEABLE BY JSON.PARSE() NO MATTER WHAT DO NOT BREAK THIS FORMAT.
+            - Try not to do too common phrases all the time. Mix it up for variability so the user can learn a wide range of text.
+          `,
+        },
+        { role: "user", content: text },
+      ],
+    });
+
+    res.send({ data: response.output_text });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
 const PORT = 3000;
 app.listen(PORT, () => {
   console.log(`✅ Server running on http://localhost:${PORT}`);
