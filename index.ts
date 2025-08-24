@@ -118,25 +118,17 @@ app.post("/openaisentence", async (req, res) => {
         {
           role: "system",
           content: `
-            You are a precise English ↔ Cebuano (Bisaya) translator.
+            You are a English ↔ Cebuano (Bisaya) tutor.
             Return ONLY valid JSON with exactly these keys and types:
             {
-              "translateToBisaya": boolean,
-              "translatedText": string,
-              "isSentence": boolean,
-              "sentenceExampleOriginal": string | null,
-              "sentenceExampleTranslated": string | null
+              "sentence": string,
             }
             Rules:
-            - Detect the input language (English or Cebuano) automatically.
-            - "translateToBisaya" = true only if input is English; false if input is Cebuano.
-            - "translatedText" = input translated into the opposite language.
-            - "isSentence" = true if the input is a full sentence (has a verb or clear clause); false for a word/short phrase.
-            - If "isSentence" = false, produce a simple example sentence in the original language using the input in context, and provide its translation.
-            - If "isSentence" = true, set both example fields to null.
+            - Generate a bisaya sentence following the CERF Language Level System (A1, A2, B1, B2, C1, C2).
+            - You will be given the CERF Language Level via User input and it is your job to return a bisaya sentence correspoinding to that level.
             - No extra commentary, no markdown, no trailing commas.
-            - The output.text MUST BE PARSEABLE BY JSON.PARSE() NO MATTER WHAT DO NOT BREAK THIS FORMAT
-            - If you are unable to process the request, instead create the JSON { "isError": true, "message": "reason" }
+            - The output.text MUST BE PARSEABLE BY JSON.PARSE() NO MATTER WHAT DO NOT BREAK THIS FORMAT.
+            - Try not to do too common phrases all the time. Mix it up for variability so the user can learn a wide range of text.
           `,
         },
         { role: "user", content: text },
