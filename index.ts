@@ -109,40 +109,103 @@ app.post("/openaitranslate", async (req, res) => {
 
 app.post("/openaisentence", async (req, res) => {
   try {
-    const { text } = req.body;
-    if (!text) return res.status(400).json({ error: "Missing 'text' field" });
+    const { level } = req.body;
+
+    if (!level) return res.status(400).json({ error: "Missing 'level' field" });
+
+    // List of diverse topics for variety
+    const topics = [
+      "food",
+      "travel",
+      "school",
+      "family",
+      "work",
+      "hobbies",
+      "sports",
+      "weather",
+      "daily routine",
+      "shopping",
+      "pets",
+      "health",
+      "music",
+      "movies",
+      "technology",
+      "friends",
+      "nature",
+      "festivals",
+      "emotions",
+      "dreams",
+      "celebrations",
+      "transportation",
+      "household chores",
+      "fashion",
+      "gardening",
+      "relationships",
+      "games",
+      "cooking",
+      "childhood",
+      "city life",
+      "adventures",
+      "books",
+      "school subjects",
+      "parties",
+      "weekend activities",
+      "holidays",
+      "learning languages",
+      "exercise",
+      "environment",
+      "social media",
+      "culture",
+      "restaurants",
+      "transport",
+      "shopping",
+      "restaurants",
+      "markets",
+      "beaches",
+      "mountains",
+      "animals",
+      "stories",
+      "news",
+      "personal goals",
+    ];
+
+    // Pick a random topic for this request
+    const topic = topics[Math.floor(Math.random() * topics.length)];
 
     const response = await openai.chat.completions.create({
       model: "gpt-4o-mini",
+      temperature: 0.95,
+      top_p: 0.95,
       frequency_penalty: 0.2,
-      temperature: 0.8,
+      presence_penalty: 0.3,
       messages: [
         {
           role: "system",
           content: `
-                    You are an English ↔ Cebuano (Bisaya) tutor.
-                    Return ONLY valid JSON with exactly these keys and types:
-                    {
-                      "bisaya": string,
-                      "english": string
-                    }
-                    Rules:
-                    - Generate a Bisaya sentence following the CEFR Language Level System (A1, A2, B1, B2, C1, C2).
-                    - The CEFR level will be provided by the user input.
-                    - Avoid repeating common phrases; vary vocabulary and sentence structures for better learning.
-                    - No extra commentary, no markdown, no trailing commas.
-                    - The output MUST be parseable by JSON.parse().
-                    - Use more randomness and creativity while keeping the sentence appropriate for the given level.
+              You are an English ↔ Cebuano (Bisaya) tutor. 
+              Your task is to generate a single, unique sentence in both Bisaya and English for language learning.
+
+              Rules:
+              - Return ONLY valid JSON in this exact format: {"bisaya": string, "english": string}.
+              - Avoid repeating vocabulary or sentence structures from previous requests. Be creative and idiomatic.
+              - Use vocabulary and grammar appropriate to the CEFR level provided (A1, A2, B1, B2, C1, C2).
+              - Incorporate the given topic naturally.
+              - Randomize sentence structures; avoid common, simple phrases.
+              - No explanations, no markdown, no extra text.
+              - Always output parseable JSON.
           `,
         },
-        { role: "user", content: text },
+        {
+          role: "user",
+          content: `Level: ${level}, Topic: ${topic}`,
+        },
       ],
     });
 
-    res.send({ data: response.choices[0].message.content });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Internal server error" });
+    res.json(response.choices[0].message?.content);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Something went wrong" });
   }
 });
 
