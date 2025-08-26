@@ -109,9 +109,9 @@ app.post("/openaitranslate", async (req, res) => {
 
 app.post("/openaisentence", async (req, res) => {
   try {
-    const { level } = req.body;
+    const { text } = req.body;
 
-    if (!level) return res.status(400).json({ error: "Missing 'level' field" });
+    if (!text) return res.status(400).json({ error: "Missing 'level' field" });
 
     // List of diverse topics for variety
     const topics = [
@@ -197,7 +197,7 @@ app.post("/openaisentence", async (req, res) => {
         },
         {
           role: "user",
-          content: `Level: ${level}, Topic: ${topic}`,
+          content: `Level: ${text}, Topic: ${topic}`,
         },
       ],
     });
