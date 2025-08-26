@@ -202,7 +202,7 @@ app.post("/openaisentence", async (req, res) => {
       ],
     });
 
-    res.json(response.choices[0].message?.content);
+    res.json({ data: response.choices[0].message.content });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Something went wrong" });
