@@ -7,7 +7,7 @@
   "type": "commonjs",
   "main": "index.ts",
   "scripts": {
-    "dev": "npx tsx index.ts"
+    "dev": "npx tsx index.js"
   },
   "dependencies": {
     "@elevenlabs/elevenlabs-js": "^2.12.0",
