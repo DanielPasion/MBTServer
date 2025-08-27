@@ -64,43 +64,48 @@ app.post("/tts", async (req, res) => {
   }
 });
 
-app.post("/openaitranslate", async (req, res) => {
+app.post("/openaitutor", async (req, res) => {
   try {
-    const { text } = req.body;
-    if (!text) return res.status(400).json({ error: "Missing 'text' field" });
+    let { messages } = req.body;
+    if (!messages || !Array.isArray(messages) || messages.length === 0)
+      return res
+        .status(400)
+        .json({ error: "Missing or invalid 'messages' field" });
 
-    const response = await openai.responses.create({
-      model: "gpt-4.1-mini",
-      input: [
-        {
-          role: "system",
-          content: `
-            You are a precise English ↔ Cebuano (Bisaya) translator.
-            Return ONLY valid JSON with exactly these keys and types:
-            {
-              "translateToBisaya": boolean,
-              "translatedText": string,
-              "isSentence": boolean,
-              "sentenceExampleOriginal": string | null,
-              "sentenceExampleTranslated": string | null
-            }
-            Rules:
-            - Detect the input language (English or Cebuano) automatically.
-            - "translateToBisaya" = true only if input is English; false if input is Cebuano.
-            - "translatedText" = input translated into the opposite language.
-            - "isSentence" = true if the input is a full sentence (has a verb or clear clause); false for a word/short phrase.
-            - If "isSentence" = false, produce a simple example sentence in the original language using the input in context, and provide its translation.
-            - If "isSentence" = true, set both example fields to null.
-            - No extra commentary, no markdown, no trailing commas.
-            - The output.text MUST BE PARSEABLE BY JSON.PARSE() NO MATTER WHAT DO NOT BREAK THIS FORMAT
-            - If you are unable to process the request, instead create the JSON { "isError": true, "message": "reason" }
-          `,
-        },
-        { role: "user", content: text },
-      ],
+    const formattedMessages: OpenAI.Chat.Completions.ChatCompletionMessageParam[] =
+      messages.map((msg: any) => ({
+        role: msg.role === "user" ? "user" : "assistant",
+        content: msg.content,
+      }));
+
+    const systemPrompt = `
+    You are a friendly, helpful tutor that teaches Bisaya to English speakers. 
+    Chat naturally with the user and encourage them to learn. 
+    You may explain words, give hints, or provide short examples, but keep it concise and easy to understand.
+    
+    Guidelines:
+    - Respond conversationally like a real tutor.
+    - Use both English and Bisaya naturally.
+    - Keep messages clear, short, and engaging.
+    - Avoid repeating previous messages verbatim.
+    - Do NOT format your response as JSON.
+    - Focus on being a helpful, interactive, bilingual tutor.
+    `;
+
+    formattedMessages.unshift({ role: "system", content: systemPrompt });
+
+    const response = await openai.chat.completions.create({
+      model: "gpt-4o-mini",
+      temperature: 0.9,
+      top_p: 0.9,
+      frequency_penalty: 0.2,
+      presence_penalty: 0.3,
+      messages: formattedMessages,
     });
 
-    res.send({ data: response.output_text });
+    const assistantContent = response.choices[0].message.content;
+
+    res.json({ text: assistantContent });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Internal server error" });
@@ -247,6 +252,49 @@ app.post("/openaiguess", async (req, res) => {
           role: "user",
           content: `Original Bisaya Sentence: ${original}. User's Guess: ${guess}`,
         },
+      ],
+    });
+
+    res.send({ data: response.output_text });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+app.post("/openaitranslate", async (req, res) => {
+  try {
+    const { text } = req.body;
+    if (!text) return res.status(400).json({ error: "Missing 'text' field" });
+
+    const response = await openai.responses.create({
+      model: "gpt-4.1-mini",
+      input: [
+        {
+          role: "system",
+          content: `
+            You are a precise English ↔ Cebuano (Bisaya) translator.
+            Return ONLY valid JSON with exactly these keys and types:
+            {
+              "translateToBisaya": boolean,
+              "translatedText": string,
+              "isSentence": boolean,
+              "sentenceExampleOriginal": string | null,
+              "sentenceExampleTranslated": string | null
+            }
+            Rules:
+            - Detect the input language (English or Cebuano) automatically.
+            - "translateToBisaya" = true only if input is English; false if input is Cebuano.
+            - "translatedText" = input translated into the opposite language.
+            - "isSentence" = true if the input is a full sentence (has a verb or clear clause); false for a word/short phrase.
+            - If "isSentence" = false, produce a simple example sentence in the original language using the input in context, and provide its translation.
+            - If "isSentence" = true, set both example fields to null.
+            - No extra commentary, no markdown, no trailing commas.
+            - The output.text MUST BE PARSEABLE BY JSON.PARSE() NO MATTER WHAT DO NOT BREAK THIS FORMAT
+            - If you are unable to process the request, instead create the JSON { "isError": true, "message": "reason" }
+          `,
+        },
+        { role: "user", content: text },
       ],
     });
 
