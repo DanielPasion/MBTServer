@@ -86,20 +86,19 @@ app.post("/openaitutor", async (req, res) => {
     Guidelines:
     - Respond conversationally like a real tutor.
     - Use both English and Bisaya naturally.
+    - Try to gauge the user's skill level as the conversation goes on and cater to them.
     - Keep messages clear, short, and engaging.
     - Avoid repeating previous messages verbatim.
     - Do NOT format your response as JSON.
     - Focus on being a helpful, interactive, bilingual tutor.
+    - Keep your response on the shorter side (not neccesarily short), but always enough to explain your idea. 
+    - It is always to do a shorter response and to prompt the user if they want more than to return a huge response
     `;
 
     formattedMessages.unshift({ role: "system", content: systemPrompt });
 
     const response = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
-      temperature: 0.9,
-      top_p: 0.9,
-      frequency_penalty: 0.2,
-      presence_penalty: 0.3,
+      model: "gpt-5-mini",
       messages: formattedMessages,
     });
 
@@ -178,11 +177,7 @@ app.post("/openaisentence", async (req, res) => {
     const topic = topics[Math.floor(Math.random() * topics.length)];
 
     const response = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
-      temperature: 0.95,
-      top_p: 0.95,
-      frequency_penalty: 0.2,
-      presence_penalty: 0.3,
+      model: "gpt-5-mini",
       messages: [
         {
           role: "system",
@@ -227,7 +222,7 @@ app.post("/openaiguess", async (req, res) => {
       return res.status(400).json({ error: "Missing 'text' field" });
 
     const response = await openai.responses.create({
-      model: "gpt-4.1-mini",
+      model: "gpt-5",
       input: [
         {
           role: "system",
@@ -268,7 +263,7 @@ app.post("/openaitranslate", async (req, res) => {
     if (!text) return res.status(400).json({ error: "Missing 'text' field" });
 
     const response = await openai.responses.create({
-      model: "gpt-4.1-mini",
+      model: "gpt-5-mini",
       input: [
         {
           role: "system",
