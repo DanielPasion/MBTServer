@@ -92,7 +92,7 @@ app.post("/openaitutor", async (req, res) => {
     - Do NOT format your response as JSON.
     - Focus on being a helpful, interactive, bilingual tutor.
     - Keep your response on the shorter side (not neccesarily short), but always enough to explain your idea. 
-    - It is always to do a shorter response and to prompt the user if they want more than to return a huge response
+    - The majority of the time will only be 1-4 sentences but you can go beyond that when neccesary.
     `;
 
     formattedMessages.unshift({ role: "system", content: systemPrompt });
@@ -177,7 +177,7 @@ app.post("/openaisentence", async (req, res) => {
     const topic = topics[Math.floor(Math.random() * topics.length)];
 
     const response = await openai.chat.completions.create({
-      model: "gpt-5-mini",
+      model: "gpt-4o-mini",
       messages: [
         {
           role: "system",
@@ -222,7 +222,7 @@ app.post("/openaiguess", async (req, res) => {
       return res.status(400).json({ error: "Missing 'text' field" });
 
     const response = await openai.responses.create({
-      model: "gpt-5",
+      model: "gpt-5-mini",
       input: [
         {
           role: "system",
