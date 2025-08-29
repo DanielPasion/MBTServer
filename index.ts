@@ -4,6 +4,10 @@ import dotenv from "dotenv";
 import cors from "cors";
 import OpenAI from "openai";
 import { ElevenLabsClient } from "@elevenlabs/elevenlabs-js";
+import { Nouns } from "./src/Nouns";
+import { Verbs } from "./src/Verbs";
+import { Adjectives } from "./src/Adjectives";
+import { Other } from "./src/Other";
 
 // Load environment variables from .env
 dotenv.config();
@@ -177,7 +181,7 @@ app.post("/openaisentence", async (req, res) => {
     const topic = topics[Math.floor(Math.random() * topics.length)];
 
     const response = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
+      model: "gpt-5",
       messages: [
         {
           role: "system",
@@ -189,6 +193,7 @@ app.post("/openaisentence", async (req, res) => {
               - Return ONLY valid JSON in this exact format: {"bisaya": string, "english": string}.
               - Avoid repeating vocabulary or sentence structures from previous requests. Be creative and idiomatic.
               - Use vocabulary and grammar appropriate to the CEFR level provided (A1, A2, B1, B2, C1, C2).
+                * A0: A person doesn't know bisaya at all. Generate the most basic and smallest sentences no more than 6-7 words.
                 * A1: Very simple, everyday words and short sentences.
                 * A2: Simple sentences with slightly wider vocabulary, can use past/present tense.
                 * B1: Connected sentences with reasons, opinions, or experiences.
@@ -294,6 +299,15 @@ app.post("/openaitranslate", async (req, res) => {
     });
 
     res.send({ data: response.output_text });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+app.get("/flashcards", async (req, res) => {
+  try {
+    res.send({ Nouns, Verbs, Adjectives, Other });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Internal server error" });
