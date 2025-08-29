@@ -189,6 +189,7 @@ app.post("/openaisentence", async (req, res) => {
               - Return ONLY valid JSON in this exact format: {"bisaya": string, "english": string}.
               - Avoid repeating vocabulary or sentence structures from previous requests. Be creative and idiomatic.
               - Use vocabulary and grammar appropriate to the CEFR level provided (A1, A2, B1, B2, C1, C2).
+                * A0: A person doesn't know bisaya at all. Generate the most basic and smallest sentences no more than 6-7 words.
                 * A1: Very simple, everyday words and short sentences.
                 * A2: Simple sentences with slightly wider vocabulary, can use past/present tense.
                 * B1: Connected sentences with reasons, opinions, or experiences.
