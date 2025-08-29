@@ -4,6 +4,10 @@ import dotenv from "dotenv";
 import cors from "cors";
 import OpenAI from "openai";
 import { ElevenLabsClient } from "@elevenlabs/elevenlabs-js";
+import { Nouns } from "./src/Nouns";
+import { Verbs } from "./src/Verbs";
+import { Adjectives } from "./src/Adjectives";
+import { Other } from "./src/Other";
 
 // Load environment variables from .env
 dotenv.config();
@@ -177,7 +181,7 @@ app.post("/openaisentence", async (req, res) => {
     const topic = topics[Math.floor(Math.random() * topics.length)];
 
     const response = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
+      model: "gpt-5",
       messages: [
         {
           role: "system",
@@ -295,6 +299,15 @@ app.post("/openaitranslate", async (req, res) => {
     });
 
     res.send({ data: response.output_text });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+app.get("/flashcards", async (req, res) => {
+  try {
+    res.send({ Nouns, Verbs, Adjectives, Other });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Internal server error" });

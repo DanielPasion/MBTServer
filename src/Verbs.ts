@@ -1,0 +1,92 @@
+export const Verbs = [
+  {
+    bisaya: "adto",
+    english: "to go (there)",
+    example_bisaya: "Adto ko sa merkado.",
+    example_english: "I will go to the market.",
+  },
+  {
+    bisaya: "anhi",
+    english: "to come (here)",
+    example_bisaya: "Anhi diri sa balay.",
+    example_english: "Come here to the house.",
+  },
+  {
+    bisaya: "balik",
+    english: "to return / come back",
+    example_bisaya: "Mobalik siya ugma.",
+    example_english: "He will come back tomorrow.",
+  },
+  {
+    bisaya: "tan-aw",
+    english: "to look / watch",
+    example_bisaya: "Tan-awa ang salida.",
+    example_english: "Watch the movie.",
+  },
+  {
+    bisaya: "pamati",
+    english: "to listen / feel",
+    example_bisaya: "Pamati sa akong giingon.",
+    example_english: "Listen to what I said.",
+  },
+  {
+    bisaya: "kaon",
+    english: "to eat",
+    example_bisaya: "Mokaon ta ug pan.",
+    example_english: "Let’s eat bread.",
+  },
+  {
+    bisaya: "inom",
+    english: "to drink",
+    example_bisaya: "Mu-inom siya ug tubig.",
+    example_english: "She will drink water.",
+  },
+  {
+    bisaya: "kuha",
+    english: "to take / get",
+    example_bisaya: "Kuhaa ang libro.",
+    example_english: "Get the book.",
+  },
+  {
+    bisaya: "hatag",
+    english: "to give",
+    example_bisaya: "Ihatag nako ang regalo.",
+    example_english: "I will give the gift.",
+  },
+  {
+    bisaya: "dala",
+    english: "to bring / carry",
+    example_bisaya: "Dala ug payong.",
+    example_english: "Bring an umbrella.",
+  },
+  {
+    bisaya: "buhat",
+    english: "to do / make",
+    example_bisaya: "Unsay imong buhaton?",
+    example_english: "What will you do?",
+  },
+  {
+    bisaya: "lakaw",
+    english: "to walk / leave",
+    example_bisaya: "Molakaw mi padulong sa simbahan.",
+    example_english: "We will walk to the church.",
+  },
+  {
+    bisaya: "dagan",
+    english: "to run",
+    example_bisaya: "Nidagan siya sa dalan.",
+    example_english: "He ran on the street.",
+  },
+  {
+    bisaya: "lingkod",
+    english: "to sit",
+    example_bisaya: "Lingkod sa bangko.",
+    example_english: "Sit on the bench.",
+  },
+  {
+    bisaya: "istorya",
+    english: "to talk / speak",
+    example_bisaya: "Nag-istorya sila sa tindahan.",
+    example_english: "They are talking at the store.",
+  },
+];

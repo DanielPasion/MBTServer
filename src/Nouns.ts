@@ -1,0 +1,92 @@
+export const Nouns = [
+  {
+    bisaya: "balay",
+    english: "house / home",
+    example_bisaya: "Magpuyo lang ta sa balay.",
+    example_english: "We'll just stay at home.",
+  },
+  {
+    bisaya: "lawak",
+    english: "room",
+    example_bisaya: "Adto sa imong lawak.",
+    example_english: "Go to your room.",
+  },
+  {
+    bisaya: "higdaanan",
+    english: "bed",
+    example_bisaya: "Ayaw pagdula sa higdaanan.",
+    example_english: "Don't play on the bed.",
+  },
+  {
+    bisaya: "salog",
+    english: "floor",
+    example_bisaya: "Ayaw ibutang sa salog.",
+    example_english: "Don't put it on the floor.",
+  },
+  {
+    bisaya: "dingding",
+    english: "wall",
+    example_bisaya: "Ayaw pintali ang dingding.",
+    example_english: "Don't paint the wall.",
+  },
+  {
+    bisaya: "pultahan",
+    english: "door",
+    example_bisaya: "Ablihi ang pultahan.",
+    example_english: "Open the door.",
+  },
+  {
+    bisaya: "suga",
+    english: "light / lamp",
+    example_bisaya: "Palonga ang suga.",
+    example_english: "Turn off the light.",
+  },
+  {
+    bisaya: "kamot",
+    english: "hand",
+    example_bisaya: "Hugas og kamot una mokaon.",
+    example_english: "Wash your hands before eating.",
+  },
+  {
+    bisaya: "tiil",
+    english: "foot",
+    example_bisaya: "Paghinlo sa imong tiil.",
+    example_english: "Clean your feet.",
+  },
+  {
+    bisaya: "mata",
+    english: "eye",
+    example_bisaya: "Tan-awa sa imong mata.",
+    example_english: "Look with your eyes.",
+  },
+  {
+    bisaya: "dunggan",
+    english: "ear",
+    example_bisaya: "Paminawa sa imong dunggan.",
+    example_english: "Listen with your ear.",
+  },
+  {
+    bisaya: "sinina",
+    english: "clothes",
+    example_bisaya: "Hiposa ang imong sinina.",
+    example_english: "Put away your clothes.",
+  },
+  {
+    bisaya: "talaan",
+    english: "list / notebook",
+    example_bisaya: "Tan-awa sa talaan ang imong buluhaton.",
+    example_english: "Check your tasks in the notebook.",
+  },
+  {
+    bisaya: "sik-ong",
+    english: "pillow",
+    example_bisaya: "Ibutang ang sik-ong sa higdaanan.",
+    example_english: "Put the pillow on the bed.",
+  },
+  {
+    bisaya: "panapton",
+    english: "blanket / cloth",
+    example_bisaya: "Taklobi ang panapton.",
+    example_english: "Fold the blanket.",
+  },
+];
